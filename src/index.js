@@ -1,74 +1,29 @@
 import React from 'react';
 import {render} from 'react-dom';
-import { Provider } from "react-redux";
-//import { createStore, bindActionCreators } from 'redux';
-import { createStore } from 'redux';
-//import { random } from 'lodash';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import App from './components/App';
+import App from './components/app';
 
-import reducer from './reducer';
+import ErrorBoundry from './components/error-boundry';
 
-//import * as actions from './actions';
+import BookstoreService from './services/bookstore-service';
 
-const store = createStore(reducer);
+import {BookstoreServiceProvider} from './components/bookstore-service-context'
 
-//const { dispatch, subscribe, getState } = store;
+import store from "./store";
 
-/*const incDispatch = () => dispatch(inc());
-const decDispatch = () => dispatch(dec());
-const rndDispatch = (payload) => dispatch(rnd(payload));*/
 
-/*
-const bindActionCreator = (creator, dispatch) => (...args) => dispatch(creator(...args));
-const incDispatch = bindActionCreator(inc, dispatch);
-const decDispatch = bindActionCreator(dec, dispatch);
-const rndDispatch = bindActionCreator(rnd, dispatch);*/
-
-/*const {
-	incDispatch,
-	decDispatch,
-	rndDispatch
-} = bindActionCreators({
-	incDispatch: inc,
-	decDispatch: dec,
-	rndDispatch: rnd
-}, dispatch);*/
-
-/*const {inc, dec, rnd } = bindActionCreators(actions, dispatch);*/
-
-/*document
-	.getElementById('inc')
-	.addEventListener('click', inc);
-
-document
-	.getElementById('dec')
-	.addEventListener('click', dec);
-
-document
-	.getElementById('rnd')
-	.addEventListener('click', () => {
-		const payload = random(1, 10);
-		rnd(payload);
-	});*/
-
-/*const update = () => {
-	render(
-		<Provider store={store}>
-			<App/>
-		</Provider>
-		, document.getElementById('root'));
-};*/
-
-//update();
-
-//subscribe(update);
+const bookstoreService = new BookstoreService();
 
 render(
 	<Provider store={store}>
-		<App/>
-	</Provider>, document.getElementById('root')
-);
-
-
-
+		<ErrorBoundry>
+			<BookstoreServiceProvider value={bookstoreService} >
+				<Router>
+					<App/>
+				</Router>
+			</BookstoreServiceProvider>
+		</ErrorBoundry>
+	</Provider>
+	, document.getElementById('root'));
